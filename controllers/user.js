@@ -88,3 +88,23 @@ module.exports.changeToAdmin = async (req, res) => {
         res.status(500).send({ message: 'Failed to update admin rights' });
     }
 }
+
+module.exports.getProfile = (req, res) => {
+
+	return User.findById(req.user.id).then(user => {
+		
+		if(!user) {
+
+			return res.status(404).send('User not found');
+		}
+        user.password = "";
+		
+		return res.status(200).send({ user });
+
+	}).catch(findErr => {
+
+		console.error('Error in finding the user: ', findErr);
+
+		return res.status(500).send({ error: 'Failed to fetch user profile' });
+	})
+};
